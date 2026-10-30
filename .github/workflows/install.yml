@@ -17,10 +17,13 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
-    env:
-      CLAUDE_CONFIG_DIR: ${{ runner.temp }}/claude-config
     steps:
       - uses: actions/checkout@v5
+
+      # O contexto "runner" não existe no env do job, só nos passos.
+      - name: Config descartável do Claude
+        shell: bash
+        run: echo "CLAUDE_CONFIG_DIR=$RUNNER_TEMP/claude-config" >> "$GITHUB_ENV"
 
       - name: Instalar (bash)
         if: runner.os != 'Windows'
