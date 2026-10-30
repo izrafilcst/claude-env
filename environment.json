@@ -1,0 +1,112 @@
+{
+  "$comment": "Fonte única da verdade do ambiente. install.sh / install.ps1 só preparam o terreno; scripts/install.mjs lê este arquivo e instala tudo. Para adicionar algo novo, edite aqui e rode 'doctor'.",
+
+  "marketplaces": [
+    { "name": "claude-plugins-official", "source": "anthropics/claude-plugins-official" },
+    { "name": "founder-skill", "source": "Jakeschincariol/founder-skill" },
+    { "name": "replica-skill", "source": "Jakeschincariol/replica-skill" },
+    { "name": "ruflo", "source": "ruvnet/ruflo" }
+  ],
+
+  "plugins": [
+    "superpowers@claude-plugins-official",
+    "claude-md-management@claude-plugins-official",
+    "context7@claude-plugins-official",
+    "github@claude-plugins-official",
+    "playwright@claude-plugins-official",
+    "frontend-design@claude-plugins-official",
+    "figma@claude-plugins-official",
+    "founder-skill@founder-skill",
+    "replica-skill@replica-skill"
+  ],
+
+  "skills": [
+    {
+      "name": "hunter-skill",
+      "repo": "https://github.com/Jakeschincariol/hunter-skill",
+      "path": "skills",
+      "include": [
+        "hunter-apply", "hunter-connector", "hunter-cover", "hunter-followup",
+        "hunter-interview", "hunter-linkedin", "hunter-research", "hunter-resume",
+        "hunter-salary", "hunter-scout", "hunter-tracker"
+      ]
+    },
+    {
+      "name": "linkedin-agent-skill",
+      "repo": "https://github.com/Jakeschincariol/linkedin-agent-skill",
+      "path": "skills",
+      "include": [
+        "li-audit", "li-carousel", "li-comment", "li-dm", "li-human", "li-inbox",
+        "li-plan", "li-post", "li-profile", "li-reply", "li-repurpose"
+      ]
+    },
+    {
+      "name": "llm-council",
+      "repo": "https://github.com/tenfoldmarc/llm-council-skill",
+      "path": ".",
+      "as": "llm-council"
+    },
+    {
+      "name": "local",
+      "path": "skills",
+      "include": ["council", "skill-router"]
+    }
+  ],
+
+  "mcpServers": [],
+
+  "settings": {
+    "model": "opus",
+    "effortLevel": "xhigh",
+    "modelSettings": {
+      "claude-opus-5-5": { "effortLevel": "xhigh" },
+      "claude-sonnet-5-5": { "effortLevel": "xhigh" }
+    },
+    "tui": "fullscreen",
+    "theme": "dark",
+    "agentPushNotifEnabled": true
+  },
+
+  "claudeMd": "config/CLAUDE.md",
+
+  "extras": {
+    "cowork": {
+      "description": "Plugins e skills que normalmente chegam sozinhos pela conta claude.ai. Use só em máquina sem essa conta, para não duplicar.",
+      "marketplaces": [
+        { "name": "knowledge-work-plugins", "source": "anthropics/knowledge-work-plugins" },
+        { "name": "anthropic-agent-skills", "source": "anthropics/skills" }
+      ],
+      "plugins": [
+        "productivity@knowledge-work-plugins",
+        "enterprise-search@knowledge-work-plugins",
+        "cowork-plugin-management@knowledge-work-plugins",
+        "engineering@knowledge-work-plugins",
+        "design@knowledge-work-plugins",
+        "data@knowledge-work-plugins",
+        "product-management@knowledge-work-plugins",
+        "operations@knowledge-work-plugins",
+        "marketing@knowledge-work-plugins",
+        "sales@knowledge-work-plugins",
+        "customer-support@knowledge-work-plugins",
+        "human-resources@knowledge-work-plugins",
+        "finance@knowledge-work-plugins",
+        "legal@knowledge-work-plugins",
+        "brand-voice@knowledge-work-plugins",
+        "pdf-viewer@knowledge-work-plugins",
+        "apollo@knowledge-work-plugins",
+        "slack-by-salesforce@knowledge-work-plugins",
+        "document-skills@anthropic-agent-skills"
+      ]
+    }
+  },
+
+  "projectProfiles": {
+    "ruflo": {
+      "description": "Orquestração multiagente do ruflo, ligada por projeto (não globalmente).",
+      "plugins": ["ruflo-mods@ruflo", "ruflo-swarm@ruflo", "ruflo-console@ruflo"],
+      "mcpServers": [
+        { "name": "ruflo", "command": "npx", "args": ["-y", "ruflo@latest", "mcp", "start"] }
+      ]
+    }
+  }
+}

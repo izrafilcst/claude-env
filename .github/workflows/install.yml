@@ -1,0 +1,57 @@
+# Roda o instalador de verdade nos três sistemas, num CLAUDE_CONFIG_DIR descartável,
+# e falha se o doctor encontrar qualquer item do manifesto faltando.
+name: install
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 9 * * 1" # toda segunda: pega quebras nos repositórios de terceiros
+
+jobs:
+  install:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    env:
+      CLAUDE_CONFIG_DIR: ${{ runner.temp }}/claude-config
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Instalar (bash)
+        if: runner.os != 'Windows'
+        run: ./install.sh
+
+      - name: Doctor (bash)
+        if: runner.os != 'Windows'
+        run: ./install.sh doctor
+
+      - name: Perfil ruflo num projeto (bash)
+        if: runner.os != 'Windows'
+        run: mkdir -p "$RUNNER_TEMP/proj" && ./install.sh project ruflo "$RUNNER_TEMP/proj"
+
+      - name: Instalar (PowerShell)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./install.ps1
+
+      - name: Doctor (PowerShell)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./install.ps1 -Command doctor
+
+      - name: Perfil ruflo num projeto (PowerShell)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $proj = New-Item -ItemType Directory -Force (Join-Path $env:RUNNER_TEMP 'proj')
+          ./install.ps1 -Command project -Name ruflo -Dir $proj.FullName
+
+      - name: Windows PowerShell 5.1 (dry-run)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: ./install.ps1 -DryRun
